@@ -1,10 +1,10 @@
 """
 This is the template server side for ChatBot
 """
-
-from bottle import route, run, template, static_file, request
+from bottle import route, run, template, static_file, request, response
 import json
 from weather import Weather
+from datetime import datetime, timedelta
 
 @route('/', method='GET')
 def index():
@@ -33,18 +33,6 @@ def chat():
 @route("/test", method="POST")
 def chat():
     user_message = request.POST.get("msg")
-    # visited = request.get_cookie("last_visited")
-    # if visited:
-    #     lapse = visited - datetime.now()
-    #     response.set_cookie(name = str("last_visited"),
-    #                         value = datetime.now(),
-    #                         expires = datetime.now() + timedelta(days=30))
-    #     return "Good to see you again. I miss you since the {}".format(visited)
-    # else:
-    #     response.set_cookie(name = str("last_visited"),
-    #                         value = str("1"+"-"+str(datetime.now())),
-    #                         expires = datetime.now() + timedelta(days=30))
-    #     return "Howdy, stranger!"
     return json.dumps({"animation": 'inlove', "msg": user_message})
 
 @route('/js/<filename:re:.*\.js>', method='GET')
@@ -115,10 +103,36 @@ def get_we(user_message):
     
     return {"animation": im, "msg": "The weather in {} is {}, with a maximum temperature of {} degree fahrenheit. {}".format(city, ret_weather, ret_temp, advice)}
 
+
+########      WELCOME FUNCTION    ########
+@route("/welcome", method="POST")
+def chat():
+    user_message = request.POST.get("msg")
+    print user_message
+    visited = request.get_cookie("last_visited")
+    if visited:
+        print 12
+        # times  = int(visited[:1]) + 1
+        # val = str(times) + "-" + str(datetime.now())
+        # response.set_cookie(name = str("last_visited"),
+        #                     value = str(val),
+        #                     expires = datetime.now() + timedelta(days=30))
+        user_message = "Good to see you again."
+        print user_message
+    else:
+        response.set_cookie(name = str("last_visited"),
+                            value = str("1"+"-"+str(datetime.now())),
+                            expires = datetime.now() + timedelta(days=30))
+        print "new" 
+        user_message = "welcome !"
+    return json.dumps({"animation": 'inlove', "msg": user_message})
+
+
+
 #######
 
 def main():
-    run(host='localhost', port=7000)
+    run(host='localhost', port=7002)
 
 if __name__ == '__main__':
     main()
