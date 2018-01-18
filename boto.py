@@ -19,7 +19,7 @@ def chat():
         return json.dumps({"animation": "no", "msg": "you're rude !!!"})
     elif "i love you" in user_message:
         return json.dumps({"animation": "inlove", "msg": "I love you too !!!"})
-    elif "i don't love you" in user_message:
+    elif "don't love you" in user_message:
         return json.dumps({"animation": "heartbroke", "msg": "Is it for for another Bot !?"})
     elif "Siri" in user_message:
         return json.dumps({"animation": "heartbroke", "msg": "I hat this bitch"})
@@ -29,15 +29,16 @@ def chat():
         return json.dumps(get_we(user_message))
     elif "my name is" in user_message:
         name = user_message.index("my name is")
-        print name
         return json.dumps({"animation": "dog", "msg": "Nice to meet you {}.".format(user_message[name+10:])})
     elif "joke" in user_message:
         joke = requests.get("http://crackmeup-api.herokuapp.com/random")
         joke = json.loads(joke.text)
         lol = joke['joke']
-        return json.dumps({"animation": "laughing", "msg": lol})
+    elif "help" in user_message:
+        aide = "You can ask me about the Weather in any city in the world. I am also very funny, ask me for a joke, or just tell me you love me."
+        return json.dumps({"animation": "ok", "msg": aide})
     else:
-        return json.dumps({"animation": "waiting", "msg": user_message})
+        return json.dumps({"animation": "waiting", "msg": "I don't realy understand what you mean by : '{}'".format(user_message)})
 
 
 @route("/test", method="POST")
