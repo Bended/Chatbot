@@ -17,15 +17,21 @@ def chat():
     user_message = user_message.lower()
     user_input = user_message.split(" ")
     if any([x in ["fuck","shit","bitch","damn","crap","piss"] for x in user_input]):
-        return json.dumps({"animation": "confused", "msg": "you're rude !!!"})
+        return json.dumps({"animation": "no", "msg": "you're rude !!!"})
     elif "i love you" in user_message:
-        return json.dumps({"animation": "inlove", "msg": "Me too !!!"})
+        return json.dumps({"animation": "inlove", "msg": "I love you too !!!"})
     elif "i don't love you" in user_message:
-        return json.dumps({"animation": "heartbroke", "msg": "What did I do wrong ???"})
+        return json.dumps({"animation": "heartbroke", "msg": "Is it for for another Bot !?"})
+    elif "Siri" in user_message:
+        return json.dumps({"animation": "heartbroke", "msg": "I hat this bitch"})
     elif "dog" in user_message:
         return json.dumps({"animation": "dog", "msg": "I love dogs"})
     elif "weather" in user_message:
         return json.dumps(get_we(user_message))
+    elif "my name is" in user_message:
+        name = user_message.index("my name is")
+        print name
+        return json.dumps({"animation": "dog", "msg": "Nice to meet you {}.".format(user_message[name+10:])})
     else:
         return json.dumps({"animation": "waiting", "msg": user_message})
 
@@ -112,19 +118,18 @@ def chat():
     visited = request.get_cookie("last_visited")
     if visited:
         print 12
-        # times  = int(visited[:1]) + 1
-        # val = str(times) + "-" + str(datetime.now())
-        # response.set_cookie(name = str("last_visited"),
-        #                     value = str(val),
-        #                     expires = datetime.now() + timedelta(days=30))
-        user_message = "Good to see you again."
+       # lapse = datetime.strptime(datetime.now() - 
+        response.set_cookie(name = str("last_visited"),
+                            value = str(datetime.now()),
+                            expires = datetime.now() + timedelta(days=30))
+        user_message = "Good to see you again. I miss you since {}.".format(visited)
         print user_message
     else:
         response.set_cookie(name = str("last_visited"),
-                            value = str("1"+"-"+str(datetime.now())),
+                            value = str(datetime.now()),
                             expires = datetime.now() + timedelta(days=30))
         print "new" 
-        user_message = "welcome !"
+        user_message = "Hello my name is Boto. Nice to meet you. You can ask me a question or ask Help"
     return json.dumps({"animation": 'inlove', "msg": user_message})
 
 
