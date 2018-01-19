@@ -36,10 +36,12 @@ def chat():
         lol = joke['joke']
     elif "help" in user_message:
         aide = "You can ask me about the Weather in any city in the world. I am also very funny, ask me for a joke, or just tell me you love me."
-        return json.dumps({"animation": "ok", "msg": aide})
+        return json.dumps({"animation": "takeoff", "msg": aide})
+    elif "what time" in user_message:
+        now = datetime.now()
+        return json.dumps({"animation": "takoff", "msg": "It is {}:{}:{}.".format(now.hour, now.minute, now.second)})
     else:
         return json.dumps({"animation": "waiting", "msg": "I don't realy understand what you mean by : '{}'".format(user_message)})
-
 
 @route("/test", method="POST")
 def chat():
@@ -87,7 +89,7 @@ def get_we(user_message):
     else:
         im = 'dancing'
     print im
-    if ret_weather.lower() in ['rain','showers','foggy']:
+    if ret_weather.lower() in ['rain','showers','foggy', 'scattered showers']:
         advice = "I think, that you should take an umbrella."
     elif ret_weather in ['cold', 'windy', 'blustery', 'snow', 'cloudy', 'foggy', 'blowing snow', 'sleet'] or int(ret_temp)<50:
         advice = "I think that you should wear a warm coat."
