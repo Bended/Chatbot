@@ -2,7 +2,7 @@
 This is the template server side for ChatBot
 """
 from bottle import route, run, template, static_file, request, response
-import json, requests, argv
+import json, requests #, argv
 from weather import Weather
 from datetime import datetime, timedelta
 
@@ -26,7 +26,11 @@ def chat():
     elif "dog" in user_message:
         return json.dumps({"animation": "dog", "msg": "I love dogs"})
     elif "weather" in user_message:
-        return json.dumps(get_we(user_message))
+        try:
+            get_we(user_message)
+            return json.dumps(get_we(user_message))
+        except:
+            return json.dumps({"animation": "money", "msg": "I don't know the forecasts for this City. Try another destination."})
     elif "my name is" in user_message:
         mynameis = user_message.index("my name is")
         my_name = str(user_message[mynameis+11:])
@@ -38,6 +42,7 @@ def chat():
         joke = requests.get("http://crackmeup-api.herokuapp.com/random")
         joke = json.loads(joke.text)
         lol = joke['joke']
+        return json.dumps({"animation": "laughing", "msg": lol})
     elif "help" in user_message:
         aide = "You can ask me about the Weather in any city in the world. I am also very funny, ask me for a joke, or just tell me you love me."
         return json.dumps({"animation": "takeoff", "msg": aide})
