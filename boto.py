@@ -2,7 +2,7 @@
 This is the template server side for ChatBot
 """
 from bottle import route, run, template, static_file, request, response
-import json, requests
+import json, requests, argv
 from weather import Weather
 from datetime import datetime, timedelta
 
@@ -133,7 +133,8 @@ def chat():
 #######
 
 def main():
-    run(host='localhost', port=7002)
+    #run(host='localhost', port=7002)
+    run(host='0.0.0.0', port=argv[1])
 
 if __name__ == '__main__':
     main()
