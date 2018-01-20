@@ -28,8 +28,12 @@ def chat():
     elif "weather" in user_message:
         return json.dumps(get_we(user_message))
     elif "my name is" in user_message:
-        name = user_message.index("my name is")
-        return json.dumps({"animation": "dog", "msg": "Nice to meet you {}.".format(user_message[name+10:])})
+        mynameis = user_message.index("my name is")
+        my_name = str(user_message[mynameis+11:])
+        response.set_cookie(name = str("user_name"),
+                            value = str(my_name),
+                            expires = datetime.now() + timedelta(days=30))
+        return json.dumps({"animation": "dog", "msg": "Nice to meet you {}.".format(my_name.capitalize())})
     elif "joke" in user_message:
         joke = requests.get("http://crackmeup-api.herokuapp.com/random")
         joke = json.loads(joke.text)
@@ -88,7 +92,6 @@ def get_we(user_message):
         im = 'crying'
     else:
         im = 'dancing'
-    print im
     if ret_weather.lower() in ['rain','showers','foggy', 'scattered showers']:
         advice = "I think, that you should take an umbrella."
     elif ret_weather in ['cold', 'windy', 'blustery', 'snow', 'cloudy', 'foggy', 'blowing snow', 'sleet'] or int(ret_temp)<50:
@@ -109,22 +112,22 @@ def get_we(user_message):
 @route("/welcome", method="POST")
 def chat():
     user_message = request.POST.get("msg")
-    print user_message
     visited = request.get_cookie("last_visited")
+    user_name = str(request.get_cookie("user_name"))
     if visited:
-        print 12
-       # lapse = datetime.strptime(datetime.now() - 
         response.set_cookie(name = str("last_visited"),
                             value = str(datetime.now()),
                             expires = datetime.now() + timedelta(days=30))
-        user_message = "Good to see you again. I miss you since {}.".format(visited[10:19])
-        print user_message
+        if user_name:
+            user_message = "Good to see you again {}. I miss you since {}.".format(user_name.capitalize(), visited[10:19])
+        else:
+            user_message = "Good to see you again. I miss you since {}.".format(visited[10:19])
     else:
         response.set_cookie(name = str("last_visited"),
                             value = str(datetime.now()),
                             expires = datetime.now() + timedelta(days=30))
-        print "new" 
         user_message = "Hello my name is Boto. Nice to meet you. You can ask me a question or ask Help"
+
     return json.dumps({"animation": 'inlove', "msg": user_message})
 
 #######
